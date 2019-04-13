@@ -2,7 +2,6 @@ var jwt = require('jsonwebtoken');
 
 class loginDAO {
 
-
     constructor(connection) {
         this._connection = connection;
     }
@@ -14,7 +13,6 @@ class loginDAO {
 
             this._connection.query(sql, (err, result, fields) => {
                 if (err) return reject(err);
-
                 if (result.length > 0) {
 
                     const payload = {
@@ -22,16 +20,26 @@ class loginDAO {
                         username: result[0].Nome
                     }
 
+                    console.log(result[0]);
+                    
+                    console.log(payload);
+                    
+
                     var token = jwt.sign(payload, process.env.SECRET, {
-                        expiresIn: 3600 // expira em 1 hora
+                        expiresIn: 36000 // expira em 1 hora
                     });
 
-                    resolve({ auth: true, mensagem: 'Login Válido!', token: token });
-
+                    resolve({
+                        auth: true,
+                        mensagem: 'Login Válido!',
+                        token: token
+                    });
                 } else {
-                    resolve({ auth: false, mensagem: 'Email e/ou Senha incorretos!' });
+                    resolve({
+                        auth: false,
+                        mensagem: 'Email e/ou Senha incorretos!'
+                    });
                 }
-
             })
         });
     }
@@ -43,15 +51,20 @@ class loginDAO {
 
             this._connection.query(sql, function (err, result, fields) {
                 if (err) return reject(err);
-
                 if (result.length > 0) {
-                    resolve({ auth: false, mensagem: 'Esse email já foi cadastrado!' });
+                    resolve({
+                        auth: false,
+                        mensagem: 'Esse email já foi cadastrado!'
+                    });
                 } else {
-
                     let sql = `INSERT INTO usuario (nome, email, senha) VALUES ('${nome}', '${email}', '${senha}')`;
                     this._connection.query(sql, function (err, result) {
                         if (err) return reject(err);
-                        resolve({ auth: true, email, senha });
+                        resolve({
+                            auth: true,
+                            email,
+                            senha
+                        });
                     });
                 }
             });
@@ -60,4 +73,3 @@ class loginDAO {
 }
 
 module.exports = loginDAO;
-

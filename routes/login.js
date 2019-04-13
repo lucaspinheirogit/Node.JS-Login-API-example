@@ -8,12 +8,14 @@ const loginDAO = require('../dao/loginDAO');
 */
 
 /*  
-*  Logar checando se o email/senha estão corretos
-*/
+ *  Logar checando se o email/senha estão corretos
+ */
 
 router.post('/', (req, res, next) => {
-    let { email, senha } = req.body;
-    
+    let {
+        email,
+        senha
+    } = req.body;
 
     new loginDAO(req.connection)
         .login(email, senha)
@@ -21,8 +23,7 @@ router.post('/', (req, res, next) => {
             result.auth ? res.status(200).json(result.token) : res.status(401).json(result.mensagem)
         })
         .catch(next)
-}
-);
+});
 
 
 

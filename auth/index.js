@@ -1,21 +1,25 @@
 const jwt = require('jsonwebtoken');
 
 module.exports = {
-    checkToken: function (req, res, next) {  
+    checkToken: function (req, res, next) {
         var token = req.get('authorization');
         if (token !== undefined) {
             if (token.length > 0) {
                 jwt.verify(token, process.env.SECRET, (error, user) => {
                     if (error) throw error;
                     req.user = user;
-                    console.log("AUTORIZADO");
                     next();
                 });
             } else {
-                throw new Error('NAO AUTORIZADO');
+                next();
             }
-        }else{
-            throw new Error('NAO AUTORIZADO');
+        } else {
+            next();
         }
+    },
+
+    isLoggedIn: function (req, res, next) {
+        req.user ? next() : res.status(401);
+        next(new Error('Unauthorized'));
     }
 }

@@ -19,12 +19,7 @@ class loginDAO {
                         id: result[0].Id,
                         username: result[0].Nome
                     }
-
-                    console.log(result[0]);
                     
-                    console.log(payload);
-                    
-
                     var token = jwt.sign(payload, process.env.SECRET, {
                         expiresIn: 36000 // expira em 1 hora
                     });

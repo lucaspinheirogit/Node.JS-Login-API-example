@@ -20,7 +20,12 @@ router.post('/', (req, res, next) => {
     new loginDAO(req.connection)
         .login(email, senha)
         .then(result => {
-            result.auth ? res.status(200).json(result.token) : res.status(401).json(result.mensagem)
+            result.auth ?
+                res.status(200).json({
+                    token: result.token,
+                    username: result.username,
+                }) :
+                res.status(401).json(result.mensagem)
         })
         .catch(next)
 });
